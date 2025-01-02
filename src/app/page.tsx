@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import {
   createTheme,
   ThemeProvider,
@@ -21,8 +21,11 @@ import Image from "next/image";
 
 const Home: React.FC = () => {
   const [darkMode, setDarkMode] = useState(() => {
-    const savedMode = localStorage.getItem("darkMode");
-    return savedMode ? JSON.parse(savedMode) : true;
+    if (typeof window !== "undefined") {
+      const savedMode = localStorage.getItem("darkMode");
+      return savedMode ? JSON.parse(savedMode) : true;
+    }
+    return true;
   });
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -33,8 +36,8 @@ const Home: React.FC = () => {
         palette: {
           mode: darkMode ? "dark" : "light",
           background: {
-            default: darkMode ? "#101820" : "#f1f0f0",
-            paper: darkMode ? "#1c1c1e" : "#e8e7e3",
+            default: darkMode ? "#101820" : "white",
+            paper: darkMode ? "#1c1c1e" : "white",
           },
           text: {
             primary: darkMode ? "white" : "#2c3e50",
@@ -52,9 +55,11 @@ const Home: React.FC = () => {
   );
 
   const toggleDarkMode = () => {
-    setDarkMode((prevMode: any) => {
+    setDarkMode((prevMode: boolean) => {
       const newMode = !prevMode;
-      localStorage.setItem("darkMode", JSON.stringify(newMode));
+      if (typeof window !== "undefined") {
+        localStorage.setItem("darkMode", JSON.stringify(newMode));
+      }
       return newMode;
     });
   };
@@ -68,9 +73,17 @@ const Home: React.FC = () => {
   };
 
   const resetSelections = () => {
-    localStorage.clear();
+    if (typeof window !== "undefined") {
+      localStorage.clear();
+    }
     window.location.reload();
   };
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("darkMode", JSON.stringify(darkMode));
+    }
+  }, [darkMode]);
 
   return (
     <ThemeProvider theme={theme}>

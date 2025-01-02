@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState, useEffect } from "react";
 import {
   Paper,
@@ -46,9 +48,7 @@ const Section: React.FC<SectionProps> = ({
                     sx={{ color: "#f1c40f" }}
                   />
                 }
-                label={
-                  <Typography sx={{ color: "#ecf0f1" }}>{item}</Typography>
-                }
+                label={<Typography sx={{ color: "white" }}>{item}</Typography>}
               />
             </Grid>
           ))}
@@ -96,33 +96,51 @@ export const DetetiveSheet: React.FC = () => {
   ];
 
   const [selectedSuspects, setSelectedSuspects] = useState<string[]>(() => {
-    const saved = localStorage.getItem("selectedSuspects");
-    return saved ? JSON.parse(saved) : [];
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("selectedSuspects");
+      return saved ? JSON.parse(saved) : [];
+    }
+    return [];
   });
 
   const [selectedWeapons, setSelectedWeapons] = useState<string[]>(() => {
-    const saved = localStorage.getItem("selectedWeapons");
-    return saved ? JSON.parse(saved) : [];
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("selectedWeapons");
+      return saved ? JSON.parse(saved) : [];
+    }
+    return [];
   });
 
   const [selectedLocations, setSelectedLocations] = useState<string[]>(() => {
-    const saved = localStorage.getItem("selectedLocations");
-    return saved ? JSON.parse(saved) : [];
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("selectedLocations");
+      return saved ? JSON.parse(saved) : [];
+    }
+    return [];
   });
 
   useEffect(() => {
-    localStorage.setItem("selectedSuspects", JSON.stringify(selectedSuspects));
+    if (typeof window !== "undefined") {
+      localStorage.setItem(
+        "selectedSuspects",
+        JSON.stringify(selectedSuspects)
+      );
+    }
   }, [selectedSuspects]);
 
   useEffect(() => {
-    localStorage.setItem("selectedWeapons", JSON.stringify(selectedWeapons));
+    if (typeof window !== "undefined") {
+      localStorage.setItem("selectedWeapons", JSON.stringify(selectedWeapons));
+    }
   }, [selectedWeapons]);
 
   useEffect(() => {
-    localStorage.setItem(
-      "selectedLocations",
-      JSON.stringify(selectedLocations)
-    );
+    if (typeof window !== "undefined") {
+      localStorage.setItem(
+        "selectedLocations",
+        JSON.stringify(selectedLocations)
+      );
+    }
   }, [selectedLocations]);
 
   return (
